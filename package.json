@@ -1,0 +1,24 @@
+{
+  "name": "slot-book",
+  "version": "1.0.0",
+  "description": "Simple slot booking engine for labs, libraries, or any resource.",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "booking",
+    "slots",
+    "express",
+    "lab"
+  ],
+  "author": "Akshay",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}
