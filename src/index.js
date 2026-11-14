@@ -36,3 +36,28 @@ function generateDailySlots(openTime, closeTime, slotMinutes) {
 
   return slots;
 }
+
+export function createBookingEngine(options = {}) {
+  const open = options.open || "09:00";
+  const close = options.close || "17:00";
+  const slotMinutes = options.slotMinutes || 60;
+
+  const resources = [];
+  const bookings = [];
+
+  return {
+    addResource(id, name) {
+      const alreadyExists = resources.find((r) => r.id === id);
+      if (alreadyExists) {
+        return { ok: false, message: "Resource already exists." };
+      }
+
+      resources.push({ id, name });
+      return { ok: true };
+    },
+
+    listResources() {
+      return resources;
+    },
+  };
+}
