@@ -1,14 +1,8 @@
-/**
- * Convert time string "09:30" to total minutes (570)
- */
 function timeToMinutes(timeStr) {
   const [hours, minutes] = timeStr.split(":").map(Number);
   return hours * 60 + minutes;
 }
 
-/**
- * Convert total minutes (570) back to time string "09:30"
- */
 function minutesToTime(totalMinutes) {
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
@@ -17,9 +11,6 @@ function minutesToTime(totalMinutes) {
   return `${hh}:${mm}`;
 }
 
-/**
- * Generate all empty slots between open and close time
- */
 function generateDailySlots(openTime, closeTime, slotMinutes) {
   const slots = [];
   let currentMinute = timeToMinutes(openTime);
@@ -58,6 +49,73 @@ export function createBookingEngine(options = {}) {
 
     listResources() {
       return resources;
+    },
+
+    listSlots(resourceId, date) {
+      const resource = resources.find((r) => r.id === resourceId);
+      if (!resource) {
+        return { ok: false, message: "Resource not found." };
+      }
+
+      const baseSlots = generateDailySlots(open, close, slotMinutes);
+
+      const slotsWithStatus = baseSlots.map((slot) => {
+        const existingBooking = bookings.find(
+          (b) => b.resourceId === resourceId && b.date === date && b.start === slot.start
+        );
+
+        return {
+          start: slot.start,
+          end: slot.end,
+          taken: Boolean(existingBooking),
+          booking: existingBooking || null,
+        };
+      });
+
+      return {
+        ok: true,
+        resource,
+        slots: slotsWithStatus,
+      };
+    },
+
+    book(info) {
+      const { resourceId, date, start, name, userId } = info;
+
+      if (!resourceId || !date || !start || !name || !userId) {
+        return { ok: false, message: "All fields are required." };
+      }
+
+      const resource = resources.find((r) => r.id === resourceId);
+      if (!resource) {
+        return { ok: false, message: "Resource not found." };
+      }
+
+      const validSlots = generateDailySlots(open, close, slotMinutes);
+      const matchedSlot = validSlots.find((s) => s.start === start);
+      if (!matchedSlot) {
+        return { ok: false, message: "That start time is not a real slot." };
+      }
+
+      const isAlreadyBooked = bookings.some(
+        (b) => b.resourceId === resourceId && b.date === date && b.start === start
+      );
+      if (isAlreadyBooked) {
+        return { ok: false, message: "That slot is already booked." };
+      }
+
+      const newBooking = {
+        id: "book_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+        resourceId,
+        date,
+        start: matchedSlot.start,
+        end: matchedSlot.end,
+        name,
+        userId,
+      };
+
+      bookings.push(newBooking);
+      return { ok: true, booking: newBooking };
     },
   };
 }
