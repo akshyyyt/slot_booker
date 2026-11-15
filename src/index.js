@@ -1,3 +1,4 @@
+
 function timeToMinutes(timeStr) {
   const [hours, minutes] = timeStr.split(":").map(Number);
   return hours * 60 + minutes;
@@ -10,6 +11,7 @@ function minutesToTime(totalMinutes) {
   const mm = String(minutes).padStart(2, "0");
   return `${hh}:${mm}`;
 }
+
 
 function generateDailySlots(openTime, closeTime, slotMinutes) {
   const slots = [];
@@ -83,7 +85,10 @@ export function createBookingEngine(options = {}) {
       const { resourceId, date, start, name, userId } = info;
 
       if (!resourceId || !date || !start || !name || !userId) {
-        return { ok: false, message: "All fields are required." };
+        return {
+          ok: false,
+          message: "All fields are required (resourceId, date, start, name, userId).",
+        };
       }
 
       const resource = resources.find((r) => r.id === resourceId);
@@ -116,6 +121,16 @@ export function createBookingEngine(options = {}) {
 
       bookings.push(newBooking);
       return { ok: true, booking: newBooking };
+    },
+
+    cancel(bookingId) {
+      const index = bookings.findIndex((b) => b.id === bookingId);
+      if (index === -1) {
+        return { ok: false, message: "Booking not found." };
+      }
+
+      const [removedBooking] = bookings.splice(index, 1);
+      return { ok: true, booking: removedBooking };
     },
   };
 }
