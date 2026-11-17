@@ -16,7 +16,7 @@
     "express",
     "lab"
   ],
-  "author": "Akshay",
+  "author": "Akshit",
   "license": "MIT",
   "engines": {
     "node": ">=18"
