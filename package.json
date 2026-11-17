@@ -18,6 +18,14 @@
   ],
   "author": "Akshit",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akshyyyt/slot_booker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/akshyyyt/slot_booker/issues"
+  },
+  "homepage": "https://github.com/akshyyyt/slot_booker#readme",
   "engines": {
     "node": ">=18"
   }
