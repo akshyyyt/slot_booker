@@ -1,6 +1,6 @@
 {
   "name": "slot-book",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Simple slot booking engine for labs, libraries, or any resource.",
   "type": "module",
   "main": "./src/index.js",
